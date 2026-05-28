@@ -82,9 +82,9 @@ npm run dev
 
 ```
 PORT=5000
-MONGODB_URI=mongodb://localhost:27017/evorax
-JWT_SECRET=change_this_to_a_long_random_string
-SESSION_SECRET=change_this_to_another_long_string
+MONGODB_URI=mongodb+srv://nisal_t_k:nisal2008@cluster0.wfbwqxu.mongodb.net/evorax?retryWrites=true&w=majority
+JWT_SECRET=hjshjhjhsjhcsjchsjc
+SESSION_SECRET=csdhdsjchscjshcjshcj
 NODE_ENV=development
 ADMIN_EMAIL=admin@evorax.lk
 ADMIN_PASSWORD=Admin@2024
