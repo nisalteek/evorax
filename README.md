@@ -202,6 +202,4 @@ evorax-events/
 
 ---
 
-## License
 
-Built for EvoraX National School, Colombo, Sri Lanka.
