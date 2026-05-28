@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EvoraX — School Events Portal</title>
+  <meta name="description" content="Official events portal for school competitions, festivals, exhibitions and more." />
+  <meta http-equiv="Content-Security-Policy" content="script-src * 'unsafe-inline' 'unsafe-eval' blob:;">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="/css/main.css" />
+</head>
+<body>
+
+<!-- ─── LOADER ─────────────────────────────────────────────── -->
+<div id="loader" class="loader">
+  <div class="loader-inner">
+    <div class="loader-logo">
+      <span class="loader-si">EVO</span><span class="loader-en">RAX</span>
+    </div>
+    <div class="loader-bar"><div class="loader-fill"></div></div>
+    <p class="loader-tagline">School Events Platform</p>
+  </div>
+</div>
+
+<!-- ─── THREE.JS CANVAS ────────────────────────────────────── -->
+<canvas id="hero-canvas"></canvas>
+
+<!-- ─── NAVBAR ─────────────────────────────────────────────── -->
+<nav id="navbar" class="navbar">
+  <div class="nav-container">
+    <a href="#home" class="nav-logo" data-route="home">
+      <span class="logo-si">EVO</span><span class="logo-en">RAX</span>
+    </a>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home" class="nav-link active" data-route="home"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
+      <li><a href="#events" class="nav-link" data-route="events"><i class="fa-solid fa-calendar-days"></i><span>Events</span></a></li>
+      <li><a href="#announcements" class="nav-link" data-route="announcements"><i class="fa-solid fa-bullhorn"></i><span>Announcements</span></a></li>
+      <li><a href="#calendar" class="nav-link" data-route="calendar"><i class="fa-solid fa-calendar"></i><span>Calendar</span></a></li>
+      <li><a href="#contact" class="nav-link" data-route="contact"><i class="fa-solid fa-envelope"></i><span>Contact</span></a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+        <i class="fa-solid fa-moon" id="themeIcon"></i>
+      </button>
+      <div id="authButtons" class="auth-buttons">
+        <button class="btn btn-ghost" onclick="showPage('login')">Sign In</button>
+        <button class="btn btn-primary" onclick="showPage('register')">Join</button>
+      </div>
+      <div id="userMenu" class="user-menu hidden">
+        <button class="user-avatar-btn" id="userAvatarBtn">
+          <div class="user-avatar" id="userAvatarDisplay">U</div>
+          <span id="userNameDisplay">User</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="user-dropdown" id="userDropdown">
+          <a href="#dashboard" onclick="showPage('dashboard')"><i class="fa-solid fa-gauge"></i>Dashboard</a>
+          <a href="#my-tickets" onclick="showPage('myTickets')"><i class="fa-solid fa-ticket"></i>My Tickets</a>
+          <a href="#profile" onclick="showPage('profile')"><i class="fa-solid fa-user-pen"></i>Profile</a>
+          <div id="adminLink" class="hidden">
+            <hr/>
+            <a href="#admin" onclick="showPage('admin')"><i class="fa-solid fa-shield-halved"></i>Admin Panel</a>
+          </div>
+          <hr/>
+          <a href="#" onclick="logout()" class="logout-link"><i class="fa-solid fa-right-from-bracket"></i>Sign Out</a>
+        </div>
+      </div>
+      <button class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── MAIN APP ───────────────────────────────────────────── -->
+<main id="app">
+
+  <!-- HOME PAGE -->
+  <div id="page-home" class="page active">
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          <span>EvoraX School — Colombo, Sri Lanka</span>
+        </div>
+        <h1 class="hero-title">
+          <span class="hero-title-en">Events & Activities</span>
+        </h1>
+        <p class="hero-subtitle">Your gateway to every competition, festival, exhibition, and milestone at EvoraX School.</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary btn-lg" onclick="showPage('events')">
+            <i class="fa-solid fa-calendar-star"></i> Explore Events
+          </button>
+          <button class="btn btn-outline btn-lg" onclick="scrollToSection('countdown-section')">
+            <i class="fa-solid fa-clock"></i> Upcoming
+          </button>
+        </div>
+        <div class="hero-stats" id="heroStats">
+          <div class="stat"><span class="stat-n" data-target="0" id="statEvents">0</span><span>Events</span></div>
+          <div class="stat-div"></div>
+          <div class="stat"><span class="stat-n" data-target="0" id="statStudents">0</span><span>Registered</span></div>
+          <div class="stat-div"></div>
+          <div class="stat"><span class="stat-n" data-target="0" id="statUpcoming">0</span><span>Upcoming</span></div>
+        </div>
+      </div>
+      <div class="hero-scroll-hint">
+        <span>Scroll</span>
+        <div class="scroll-arrow"><i class="fa-solid fa-chevron-down"></i></div>
+      </div>
+    </section>
+
+       <!-- Countdown Section -->
+    <section class="section countdown-section" id="countdown-section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-label">UPCOMING EVENTS</div>
+          <h2>Upcoming Events</h2>
+          <p>Don't miss these upcoming events at EvoraX</p>
+        </div>
+        <div id="countdownCarousel" class="countdown-carousel">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+        <!-- Announcements Banner -->
+    <section class="section announcements-section" id="announcements">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-label">LATEST NEWS</div>
+          <h2>Announcements</h2>
+        </div>
+        <div id="announcementsList" class="announcements-list"></div>
+      </div>
+    </section>
+
+        <!-- Featured Events -->
+    <section class="section events-preview-section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-label">FEATURED EVENTS</div>
+          <h2>Featured Events</h2>
+          <p>Highlighted events of the season</p>
+        </div>
+        <div id="featuredEventsGrid" class="events-grid"></div>
+        <div class="text-center mt-40">
+          <button class="btn btn-outline btn-lg" onclick="showPage('events')">View All Events <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Parallax divider -->
+    <div class="parallax-divider">
+      <div class="parallax-content">
+        <h3>Elevating Excellence</h3>
+        <p>Elevating Excellence Since 1946</p>
+      </div>
+    </div>
+
+    <!-- How it works - IMPROVED ALIGNMENT -->
+    <section class="section how-section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-label">Process</div>
+          <h2>How It Works</h2>
+        </div>
+        <div class="steps-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; text-align: center; align-items: start;">
+          <div class="step-card" data-step="1" style="text-align: center;">
+            <div class="step-icon"><i class="fa-solid fa-user-plus"></i></div>
+            <h3 style="margin: 1rem 0 0.5rem 0;">Register</h3>
+            <p style="margin: 0; line-height: 1.5;">Create your account and join the EvoraX community</p>
+          </div>
+          <div class="step-card" data-step="2" style="text-align: center;">
+            <div class="step-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <h3 style="margin: 1rem 0 0.5rem 0;">Browse Events</h3>
+            <p style="margin: 0; line-height: 1.5;">Explore upcoming debates, sports meets, exhibitions and more</p>
+          </div>
+          <div class="step-card" data-step="3" style="text-align: center;">
+            <div class="step-icon"><i class="fa-solid fa-ticket"></i></div>
+            <h3 style="margin: 1rem 0 0.5rem 0;">Get Your Ticket</h3>
+            <p style="margin: 0; line-height: 1.5;">Register and receive a digital ticket with a unique QR code</p>
+          </div>
+          <div class="step-card" data-step="4" style="text-align: center;">
+            <div class="step-icon"><i class="fa-solid fa-certificate"></i></div>
+            <h3 style="margin: 1rem 0 0.5rem 0;">Earn Certificate</h3>
+            <p style="margin: 0; line-height: 1.5;">Download your participation certificate after the event</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /page-home -->
+
+    <!-- EVENTS PAGE -->
+  <div id="page-events" class="page">
+    <div class="page-hero">
+      <div class="container">
+        <div class="page-hero-label">EVENTS</div>
+        <h1>All Events</h1>
+        <p>Explore all school activities, competitions, and celebrations</p>
+      </div>
+    </div>
+    <div class="container section">
+
+      <!-- Filters -->
+      <div class="events-filters">
+        <div class="search-bar">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="eventSearch" placeholder="Search events..." />
+        </div>
+        <div class="filter-chips" id="filterChips">
+          <button class="chip active" data-cat="all">All</button>
+          <button class="chip" data-cat="debate">Debate</button>
+          <button class="chip" data-cat="sports">Sports</button>
+          <button class="chip" data-cat="exhibition">Exhibition</button>
+          <button class="chip" data-cat="cultural">Cultural</button>
+          <button class="chip" data-cat="academic">Academic</button>
+          <button class="chip" data-cat="music">Music</button>
+          <button class="chip" data-cat="drama">Drama</button>
+          <button class="chip" data-cat="science">Science</button>
+        </div>
+        <div class="filter-status">
+          <select id="statusFilter" class="select-input">
+            <option value="">All Status</option>
+            <option value="upcoming">Upcoming</option>
+            <option value="ongoing">Ongoing</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="eventsGrid" class="events-grid"></div>
+      <div id="eventsPagination" class="pagination"></div>
+    </div>
+  </div>
+
+  <!-- EVENT DETAIL PAGE -->
+  <div id="page-event-detail" class="page">
+    <div id="eventDetailContent"></div>
+  </div>
+
+  <!-- ANNOUNCEMENTS PAGE -->
+  <div id="page-announcements" class="page">
+    <div class="page-hero">
+      <div class="container">
+        <div class="page-hero-label">Announcements</div>
+        <h1>Announcements</h1>
+        <p>Latest news and notices from EvoraX School</p>
+      </div>
+    </div>
+    <div class="container section">
+      <div id="announcementsPageList" class="announcements-page-list"></div>
+    </div>
+  </div>
+
+  <!-- CALENDAR PAGE -->
+  <div id="page-calendar" class="page">
+    <div class="page-hero">
+      <div class="container">
+        <div class="page-hero-label">Calendar</div>
+        <h1>Events Calendar</h1>
+        <p>View all events in a monthly calendar view</p>
+      </div>
+    </div>
+    <div class="container section">
+      <div class="calendar-wrapper">
+        <div class="calendar-header">
+          <button class="btn btn-ghost" id="calPrev"><i class="fa-solid fa-chevron-left"></i></button>
+          <h2 id="calMonthYear">June 2025</h2>
+          <button class="btn btn-ghost" id="calNext"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+        <div id="calendarEventsList" class="calendar-events-list"></div>
+      </div>
+    </div>
+  </div>
+
+    <!-- CONTACT PAGE -->
+  <div id="page-contact" class="page">
+    <div class="page-hero">
+      <div class="container">
+        <div class="page-hero-label">CONTACT</div>
+        <h1>Contact Us</h1>
+        <p>Get in touch with the EvoraX events team</p>
+      </div>
+    </div>
+    <div class="container section">
+      <div class="contact-grid">
+        <div class="contact-info">
+          <h3>Get In Touch</h3>
+          <div class="contact-item">
+            <div class="contact-icon"><i class="fa-solid fa-location-dot"></i></div>
+            <div>
+              <strong>Address</strong>
+              <p>EvoraX National School<br/>Galle Road, Colombo 03, Sri Lanka</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
+            <div>
+              <strong>Phone</strong>
+              <p>+94 11 234 5678</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon"><i class="fa-solid fa-envelope"></i></div>
+            <div>
+              <strong>Email</strong>
+              <p>info@evorax.lk</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon"><i class="fa-solid fa-clock"></i></div>
+            <div>
+              <strong>Office Hours</strong>
+              <p>Monday – Friday: 7:30 AM – 3:30 PM</p>
+            </div>
+          </div>
+        </div>
+        <div class="contact-form-card">
+          <h3>Send a Message</h3>
+          <form id="contactForm" class="contact-form">
+            <div class="form-group">
+              <label>Your Name</label>
+              <input type="text" id="contactName" placeholder="Ariyaratna de Silva" required />
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="contactEmail" placeholder="your@email.com" required />
+            </div>
+            <div class="form-group">
+              <label>Subject</label>
+              <input type="text" id="contactSubject" placeholder="Event Inquiry" required />
+            </div>
+            <div class="form-group">
+              <label>Message</label>
+              <textarea id="contactMessage" rows="5" placeholder="Your message here..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">
+              <i class="fa-solid fa-paper-plane"></i> Send Message
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN PAGE -->
+  <div id="page-login" class="page auth-page">
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <div class="auth-logo">
+            <span class="logo-si">EVO</span><span class="logo-en">RAX</span>
+          </div>
+          <h2>Welcome Back</h2>
+          <p>Sign in to your account</p>
+        </div>
+        <form id="loginForm" class="auth-form">
+          <div class="form-group">
+            <label><i class="fa-solid fa-envelope"></i> Email</label>
+            <input type="email" id="loginEmail" placeholder="your@email.com" required />
+          </div>
+          <div class="form-group">
+            <label><i class="fa-solid fa-lock"></i> Password</label>
+            <div class="input-with-toggle">
+              <input type="password" id="loginPassword" placeholder="••••••••" required />
+              <button type="button" class="input-toggle" onclick="togglePassword('loginPassword')"><i class="fa-solid fa-eye"></i></button>
+            </div>
+          </div>
+          <div id="loginError" class="form-error hidden"></div>
+          <button type="submit" class="btn btn-primary btn-full" id="loginBtn">
+            <i class="fa-solid fa-right-to-bracket"></i> Sign In
+          </button>
+        </form>
+        <div class="auth-divider"><span>or</span></div>
+        <p class="auth-switch">Don't have an account? <a href="#" onclick="showPage('register')">Join now</a></p>
+        <div class="demo-credentials">
+          <p><strong>Demo Credentials:</strong></p>
+          <button class="demo-btn" onclick="fillDemo('admin@evorax.lk','Admin@2024')">Admin Login</button>
+          <button class="demo-btn" onclick="fillDemo('ariyaratna@student.evorax.lk','Student@123')">Student Login</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGISTER PAGE -->
+  <div id="page-register" class="page auth-page">
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <div class="auth-logo">
+            <span class="logo-si">EVO</span><span class="logo-en">RAX</span>
+          </div>
+          <h2>Join EvoraX</h2>
+          <p>Create your account</p>
+        </div>
+        <form id="registerForm" class="auth-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" id="regName" placeholder="Ariyaratna de Silva" required />
+            </div>
+            <div class="form-group">
+              <label>Role</label>
+              <select id="regRole" class="select-input">
+                <option value="student">Student</option>
+                <option value="teacher">Teacher</option>
+                <option value="parent">Parent</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="regEmail" placeholder="your@email.com" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Phone (Optional)</label>
+              <input type="tel" id="regPhone" placeholder="+94 71 234 5678" />
+            </div>
+            <div class="form-group">
+              <label>Grade (Students)</label>
+              <select id="regGrade" class="select-input">
+                <option value="">Select Grade</option>
+                <option>Grade 6</option><option>Grade 7</option><option>Grade 8</option>
+                <option>Grade 9</option><option>Grade 10</option><option>Grade 11</option>
+                <option>Grade 12</option><option>Grade 13</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <div class="input-with-toggle">
+              <input type="password" id="regPassword" placeholder="Min. 6 characters" required />
+              <button type="button" class="input-toggle" onclick="togglePassword('regPassword')"><i class="fa-solid fa-eye"></i></button>
+            </div>
+          </div>
+          <div id="registerError" class="form-error hidden"></div>
+          <button type="submit" class="btn btn-primary btn-full" id="registerBtn">
+            <i class="fa-solid fa-user-plus"></i> Create Account
+          </button>
+        </form>
+        <p class="auth-switch">Already have an account? <a href="#" onclick="showPage('login')">Sign in</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD PAGE -->
+  <div id="page-dashboard" class="page">
+    <div class="page-hero">
+      <div class="container">
+        <div class="page-hero-label">Your Account</div>
+        <h1 id="dashboardGreeting">Dashboard</h1>
+      </div>
+    </div>
+    <div class="container section">
+      <div class="dashboard-grid">
+        <div class="dashboard-card">
+          <div class="dash-card-icon"><i class="fa-solid fa-ticket"></i></div>
+          <div class="dash-card-info">
+            <h3 id="dashTicketCount">0</h3>
+            <p>My Tickets</p>
+          </div>
+        </div>
+        <div class="dashboard-card" onclick="showPage('myTickets')">
+          <div class="dash-card-icon"><i class="fa-solid fa-calendar-check"></i></div>
+          <div class="dash-card-info">
+            <h3 id="dashRegistrations">0</h3>
+            <p>Registered Events</p>
+          </div>
+        </div>
+      </div>
+      <div class="dashboard-section">
+        <h3>My Registrations</h3>
+        <div id="dashboardRegistrations" class="ticket-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MY TICKETS PAGE -->
+  <div id="page-myTickets" class="page">
+    <div class="page-hero">
+      <div class="container">
+        <div class="page-hero-label">Tickets</div>
+        <h1>My Tickets</h1>
+        <p>Your event registrations and tickets</p>
+      </div>
+    </div>
+    <div class="container section">
+      <div id="myTicketsList" class="ticket-list"></div>
+    </div>
+  </div>
+
+  <!-- PROFILE PAGE -->
+  <div id="page-profile" class="page">
+    <div class="page-hero">
+      <div class="container">
+        <div class="page-hero-label">Account</div>
+        <h1>My Profile</h1>
+      </div>
+    </div>
+    <div class="container section">
+      <div class="profile-grid">
+        <div class="profile-card">
+          <div class="profile-avatar" id="profileAvatar">U</div>
+          <h3 id="profileName">User</h3>
+          <p id="profileRole" class="role-badge">Student</p>
+          <p id="profileEmail" class="profile-email"></p>
+        </div>
+        <div class="profile-form-card">
+          <h3>Update Profile</h3>
+          <form id="profileForm" class="auth-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="profileNameInput" />
+              </div>
+              <div class="form-group">
+                <label>Phone</label>
+                <input type="tel" id="profilePhone" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Grade</label>
+              <select id="profileGrade" class="select-input">
+                <option value="">Select Grade</option>
+                <option>Grade 6</option><option>Grade 7</option><option>Grade 8</option>
+                <option>Grade 9</option><option>Grade 10</option><option>Grade 11</option>
+                <option>Grade 12</option><option>Grade 13</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </form>
+          <hr class="section-divider" />
+          <h3>Change Password</h3>
+          <form id="passwordForm" class="auth-form">
+            <div class="form-group">
+              <label>Current Password</label>
+              <input type="password" id="currentPassword" placeholder="••••••••" />
+            </div>
+            <div class="form-group">
+              <label>New Password</label>
+              <input type="password" id="newPassword" placeholder="••••••••" />
+            </div>
+            <button type="submit" class="btn btn-outline">Change Password</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN PAGE -->
+  <div id="page-admin" class="page">
+    <div class="page-hero">
+      <div class="container">
+        <div class="page-hero-label">Admin</div>
+        <h1>Admin Panel</h1>
+        <p>Manage events, users, and announcements</p>
+      </div>
+    </div>
+    <div class="container section">
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="overview">Overview</button>
+        <button class="admin-tab" data-tab="events">Events</button>
+        <button class="admin-tab" data-tab="users">Users</button>
+        <button class="admin-tab" data-tab="announcements">Announcements</button>
+        <button class="admin-tab" data-tab="contacts">Messages</button>
+      </div>
+
+      <!-- Overview -->
+      <div id="admin-tab-overview" class="admin-tab-content active">
+        <div class="admin-stats-grid" id="adminStatsGrid"></div>
+        <div class="admin-recent">
+          <div class="admin-recent-section">
+            <h3>Recent Events</h3>
+            <div id="adminRecentEvents"></div>
+          </div>
+          <div class="admin-recent-section">
+            <h3>Recent Users</h3>
+            <div id="adminRecentUsers"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Events Management -->
+      <div id="admin-tab-events" class="admin-tab-content">
+        <div class="admin-toolbar">
+          <h3>Manage Events</h3>
+          <button class="btn btn-primary" onclick="openEventModal()">
+            <i class="fa-solid fa-plus"></i> Add Event
+          </button>
+        </div>
+        <div id="adminEventsList"></div>
+      </div>
+
+      <!-- Users Management -->
+      <div id="admin-tab-users" class="admin-tab-content">
+        <div class="admin-toolbar">
+          <h3>Manage Users</h3>
+          <input type="text" id="adminUserSearch" placeholder="Search users..." class="search-input" />
+        </div>
+        <div id="adminUsersList"></div>
+      </div>
+
+      <!-- Announcements Management -->
+      <div id="admin-tab-announcements" class="admin-tab-content">
+        <div class="admin-toolbar">
+          <h3>Manage Announcements</h3>
+          <button class="btn btn-primary" onclick="openAnnouncementModal()">
+            <i class="fa-solid fa-plus"></i> Add Announcement
+          </button>
+        </div>
+        <div id="adminAnnouncementsList"></div>
+      </div>
+
+      <!-- Contact Messages -->
+      <div id="admin-tab-contacts" class="admin-tab-content">
+        <h3>Contact Messages</h3>
+        <div id="adminContactsList"></div>
+      </div>
+    </div>
+  </div>
+
+</main><!-- /app -->
+
+<!-- ─── MODALS ─────────────────────────────────────────────── -->
+<div id="modal-overlay" class="modal-overlay" onclick="closeModal()"></div>
+
+<!-- Event Registration Modal -->
+<div id="modal-register-event" class="modal">
+  <div class="modal-header">
+    <h3 id="modalEventTitle">Register for Event</h3>
+    <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="modal-body" id="modalRegisterBody">
+    <div class="form-group">
+      <label>Ticket Type</label>
+      <select id="ticketTypeSelect" class="select-input">
+        <option value="general">General</option>
+        <option value="student">Student</option>
+        <option value="vip">VIP</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Phone (Optional)</label>
+      <input type="tel" id="regPhone2" placeholder="+94 71 234 5678" />
+    </div>
+    <div class="form-group">
+      <label>Special Requirements</label>
+      <textarea id="regRequirements" rows="2" placeholder="Any special needs?"></textarea>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" id="confirmRegBtn" onclick="confirmEventRegistration()">
+      <i class="fa-solid fa-ticket"></i> Confirm Registration
+    </button>
+  </div>
+</div>
+
+<!-- Ticket View Modal -->
+<div id="modal-ticket" class="modal modal-lg">
+  <div class="modal-header">
+    <h3>Your Ticket</h3>
+    <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="modal-body" id="ticketModalBody"></div>
+  <div class="modal-footer">
+    <button class="btn btn-ghost" onclick="closeModal()">Close</button>
+    <button class="btn btn-primary" id="downloadTicketBtn"><i class="fa-solid fa-download"></i> Download PDF</button>
+    <button class="btn btn-outline" id="downloadCertBtn"><i class="fa-solid fa-certificate"></i> Certificate</button>
+  </div>
+</div>
+
+<!-- Admin Event Modal -->
+<div id="modal-event-form" class="modal modal-xl">
+  <div class="modal-header">
+    <h3 id="eventFormTitle">Add New Event</h3>
+    <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="modal-body">
+    <form id="eventForm" class="event-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Title (English)</label>
+          <input type="text" id="ef-title" required />
+        </div>
+        <div class="form-group">
+          <label>Title (Sinhala)</label>
+          <input type="text" id="ef-titleSinhala" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="ef-description" rows="3" required></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category</label>
+          <select id="ef-category" class="select-input" required>
+            <option value="debate">Debate</option>
+            <option value="sports">Sports</option>
+            <option value="exhibition">Exhibition</option>
+            <option value="cultural">Cultural</option>
+            <option value="academic">Academic</option>
+            <option value="music">Music</option>
+            <option value="drama">Drama</option>
+            <option value="science">Science</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="ef-status" class="select-input">
+            <option value="upcoming">Upcoming</option>
+            <option value="ongoing">Ongoing</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" id="ef-date" required />
+        </div>
+        <div class="form-group">
+          <label>Time</label>
+          <input type="time" id="ef-time" required />
+        </div>
+        <div class="form-group">
+          <label>End Date (Optional)</label>
+          <input type="date" id="ef-endDate" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Venue</label>
+          <input type="text" id="ef-venue" required />
+        </div>
+        <div class="form-group">
+          <label>Venue (Sinhala)</label>
+          <input type="text" id="ef-venueSinhala" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Organizer</label>
+          <input type="text" id="ef-organizer" required />
+        </div>
+        <div class="form-group">
+          <label>Capacity</label>
+          <input type="number" id="ef-capacity" value="100" min="1" />
+        </div>
+        <div class="form-group">
+          <label>Ticket Price (LKR)</label>
+          <input type="number" id="ef-ticketPrice" value="0" min="0" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Registration Deadline</label>
+          <input type="date" id="ef-regDeadline" />
+        </div>
+        <div class="form-group">
+          <label>Image URL</label>
+          <input type="url" id="ef-image" placeholder="https://..." />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group form-check">
+          <label><input type="checkbox" id="ef-featured" /> Featured Event</label>
+        </div>
+      </div>
+      <input type="hidden" id="ef-id" />
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="submitEventForm()">Save Event</button>
+  </div>
+</div>
+
+<!-- Announcement Form Modal -->
+<div id="modal-announcement-form" class="modal">
+  <div class="modal-header">
+    <h3 id="annFormTitle">Add Announcement</h3>
+    <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="modal-body">
+    <form id="announcementForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" id="ann-title" required />
+        </div>
+        <div class="form-group">
+          <label>Title (Sinhala)</label>
+          <input type="text" id="ann-titleSinhala" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Content</label>
+        <textarea id="ann-content" rows="3" required></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Type</label>
+          <select id="ann-type" class="select-input">
+            <option value="general">General</option>
+            <option value="urgent">Urgent</option>
+            <option value="event">Event</option>
+            <option value="result">Result</option>
+            <option value="holiday">Holiday</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Priority (0–10)</label>
+          <input type="number" id="ann-priority" value="0" min="0" max="10" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group form-check">
+          <label><input type="checkbox" id="ann-pinned" /> Pin to top</label>
+        </div>
+      </div>
+      <input type="hidden" id="ann-id" />
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="submitAnnouncementForm()">Save</button>
+  </div>
+</div>
+
+<!-- Feedback Modal -->
+<div id="modal-feedback" class="modal">
+  <div class="modal-header">
+    <h3>Share Your Feedback</h3>
+    <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="modal-body">
+    <form id="feedbackForm">
+      <div class="form-group">
+        <label>Overall Rating</label>
+        <div class="star-rating" id="starRating">
+          <i class="fa-regular fa-star" data-v="1"></i>
+          <i class="fa-regular fa-star" data-v="2"></i>
+          <i class="fa-regular fa-star" data-v="3"></i>
+          <i class="fa-regular fa-star" data-v="4"></i>
+          <i class="fa-regular fa-star" data-v="5"></i>
+        </div>
+        <input type="hidden" id="feedbackRating" value="0" />
+      </div>
+      <div class="form-group">
+        <label>Your Comments</label>
+        <textarea id="feedbackComment" rows="4" placeholder="Share your experience..." required></textarea>
+      </div>
+      <input type="hidden" id="feedbackEventId" />
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="submitFeedback()">Submit Feedback</button>
+  </div>
+</div>
+
+<!-- Toast Notifications -->
+<div id="toast-container" class="toast-container"></div>
+
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="/js/app.js"></script>
+
+</body>
+</html>
