@@ -1,4 +1,4 @@
-# විදුහල — EvoraX National School Events Platform
+# EvoraX National School Events Platform
 
 A full-stack school event management web platform built with Node.js, Express, MongoDB, Three.js, and GSAP.
 
@@ -83,8 +83,8 @@ npm run dev
 ```
 PORT=5000
 MONGODB_URI=mongodb://localhost:27017/evorax
-JWT_SECRET=change_this_to_a_long_random_string
-SESSION_SECRET=change_this_to_another_long_string
+JWT_SECRET=hfuhfjhfjdhfjd
+SESSION_SECRET=hhjshjdfhdjfhf
 NODE_ENV=development
 ADMIN_EMAIL=admin@evorax.lk
 ADMIN_PASSWORD=Admin@2024
