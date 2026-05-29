@@ -2135,3 +2135,142 @@ body {
     height: 140px;
   }
 }
+/* ============================================
+   ADDITIONAL FIXES FOR 3D CANVAS, LOADING SCENE & HERO
+   ============================================ */
+
+/* Fix Three.js canvas and loading scene on mobile */
+@media (max-width: 768px) {
+  /* Make 3D canvas fit phone screen */
+  #hero-canvas {
+    width: 100% !important;
+    height: 100vh !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    object-fit: cover !important;
+  }
+  
+  /* Fix loader positioning and scaling */
+  .loader {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .loader-inner {
+    text-align: center;
+    padding: 1rem;
+  }
+  
+  .loader-logo {
+    font-size: 2rem;
+    letter-spacing: 0.05em;
+  }
+  
+  .loader-si, .loader-en {
+    display: inline-block;
+  }
+  
+  .loader-bar {
+    width: 180px;
+    height: 2px;
+  }
+  
+  .loader-tagline {
+    font-size: 0.7rem;
+  }
+  
+  /* Make sure hero content appears above canvas */
+  .hero {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 2;
+  }
+  
+  /* Fix hero title size on mobile */
+  .hero-title {
+    font-size: 2rem !important;
+    line-height: 1.2 !important;
+  }
+  
+  .hero-title-en {
+    font-size: 1.6rem;
+  }
+  
+  /* Fix scroll hint position */
+  .hero-scroll-hint {
+    bottom: 1rem;
+    font-size: 0.6rem;
+    z-index: 2;
+  }
+}
+
+/* Extra small phones (400px and below) */
+@media (max-width: 400px) {
+  .loader-logo {
+    font-size: 1.5rem;
+  }
+  
+  .loader-bar {
+    width: 150px;
+  }
+  
+  .loader-tagline {
+    font-size: 0.6rem;
+  }
+  
+  .hero-title {
+    font-size: 1.6rem !important;
+  }
+  
+  .hero-title-en {
+    font-size: 1.3rem;
+  }
+  
+  .hero-badge {
+    font-size: 0.55rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 0.8rem;
+  }
+  
+  .stat-n {
+    font-size: 1rem;
+  }
+  
+  .stat span:last-child {
+    font-size: 0.5rem;
+  }
+}
+
+/* Landscape mode orientation fix for canvas */
+@media (max-width: 768px) and (orientation: landscape) {
+  .loader {
+    height: 100vh;
+  }
+  
+  .loader-inner {
+    transform: scale(0.8);
+  }
+  
+  .hero {
+    min-height: auto;
+    padding-top: 60px;
+  }
+  
+  #hero-canvas {
+    height: 100vh !important;
+  }
+}
