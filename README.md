@@ -90,41 +90,6 @@ ADMIN_EMAIL=admin@evorax.lk
 ADMIN_PASSWORD=Admin@2024
 ```
 
----
-
-## Deploy to Render
-
-1. Push code to a GitHub repository.
-2. Go to [render.com](https://render.com) → New → Web Service.
-3. Connect your GitHub repo.
-4. Set **Build Command**: `npm install`
-5. Set **Start Command**: `npm start`
-6. Add all environment variables from `.env.example` in the Render dashboard.
-7. Set `MONGODB_URI` to your MongoDB Atlas connection string.
-8. Set `NODE_ENV=production`.
-9. Deploy. After deploy, run the seed once via Render Shell: `npm run seed`.
-
-### MongoDB Atlas (free)
-1. Go to [mongodb.com/atlas](https://www.mongodb.com/atlas).
-2. Create a free M0 cluster.
-3. Click **Connect** → **Connect your application**.
-4. Copy the URI and replace `<password>` with your DB user password.
-5. Paste into `MONGODB_URI` in Render environment variables.
-
----
-
-## Deploy to Netlify (Frontend-only option)
-
-> For full-stack, Render is recommended. Netlify works if you split frontend/backend.
-
-For full-stack on Netlify:
-1. Install Netlify CLI: `npm i -g netlify-cli`
-2. `netlify init`
-3. Set publish directory to `frontend/public`
-4. Add a `netlify.toml` with redirect rules for the SPA.
-
----
-
 ## Project Structure
 
 ```
