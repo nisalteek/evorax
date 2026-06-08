@@ -25,7 +25,7 @@ const App = {
 
 /* ─── API ────────────────────────────────────────────────── */
 const API = {
-  base: '/api',
+  base: 'https://evorax.onrender.com/api',
   async req(method, path, body, auth = false) {
     const headers = { 'Content-Type': 'application/json' };
     if (auth && App.token) headers['Authorization'] = `Bearer ${App.token}`;
