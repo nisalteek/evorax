@@ -23,6 +23,15 @@ A full-stack school event management web platform built with Node.js, Express, M
 - Fully responsive — mobile-first
 
 ---
+ markdown
+## How to Add Images When Creating Events
+
+When creating or editing an event, you can add an image URL to make the event card more attractive.
+
+### Image URL Format
+
+Use a direct image URL in this format:
+https://images.unsplash.com/photo-[PHOTO_ID]?w=800&h=400&fit=crop
 
 ## Tech Stack
 
